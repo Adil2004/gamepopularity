@@ -13,6 +13,7 @@ def predict_game(game):
     data_frame = pd.DataFrame([game])
 
     df = GameAgeTransformer().fit_transform(data_frame)
+    df["age_restriction"] = df["age_restriction"].astype(int)
 
     prediction = model.predict(df)[0]
 

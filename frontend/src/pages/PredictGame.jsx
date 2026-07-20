@@ -2,6 +2,7 @@ import {useState, useEffect} from "react"
 import api from "../api"
 import Game from "../components/Game"
 import {useNavigate} from "react-router-dom"
+import "../styles/Game.css"
 
 function PredictGame() {
     const [game, setGames] = useState([]);
@@ -16,12 +17,11 @@ function PredictGame() {
     const [languages, setLanguages] = useState([]);
     const [price, setPrice] = useState(0);
     const navigate = useNavigate();
+    const [prediction, setPrediction] = useState(null);
 
     useEffect(() => {
-        getGames();
         getLanguages();
         getPlatforms();
-        setUsername(localStorage.getItem("username"));
     }, [])
 
     const getLanguages = () => {
@@ -34,23 +34,6 @@ function PredictGame() {
     api.get("/api/platforms/")
         .then(res => setAvailablePlatforms(res.data))
         .catch(err => console.log(err));
-    };
-
-    const getGames = () => {
-        api
-            .get("/api/games/")
-            .then((res) => res.data)
-            .then((data) => { setGames(data); console.log(data); })
-            .catch((err) => alert(err));
-    };
-
-    const deleteGame = (id) => {
-        api.delete(`/api/games/delete/${id}/`)
-        .then((res) => {
-            if (res.status === 204) alert("game deleted");
-            else alert("Failed to delete game");
-            getGames();
-        }).catch((error) => alert(error));
     };
 
     const PredictGame = async (e) => {
@@ -76,14 +59,9 @@ function PredictGame() {
 
         try {
             const response = await api.post("/api/predict/", game);
+            setPrediction(response.data);
 
-            console.log(response.data);
-
-            alert(
-                response.data.prediction === 1
-                    ? "Popular Game!"
-                    : "Not Popular"
-            );
+            
 
         } catch (err) {
             console.error(err);
@@ -113,8 +91,6 @@ function PredictGame() {
         setEditLanguages(game.language_ids);
     };
 
-    const [username, setUsername] = useState("");
-
 
 
     return (
@@ -122,141 +98,169 @@ function PredictGame() {
             <ul className="navbar">
                 <li><a href="/">Home</a></li>
                 <li><a href="/predict-game/">Predict Game</a></li>
-                <li className = "navbar-logout-li">
-                    <a href="/logout/">Logout</a>
-                </li>
             </ul>   
 
             <h1>Game Manager</h1>
-            <h2>Welcome, @{username} ! This is the page for predicting game popularity</h2>
+            <h2>Welcome! This is the page for predicting game popularity</h2>
+            <div className="prediction-container">
+                <div className="form-section">
+                    <h2>Predict Game Popularity</h2>
+                    <form onSubmit = {PredictGame}>
+                        
+                        <label htmlFor = "game_name">Game Name</label>
+                        <br/>
+                        <input 
+                            type = "text" 
+                            id = "game_name" 
+                            name = "game_name" 
+                            required 
+                            onChange = {(e) => setName(e.target.value)}
+                            value={name}
+                        />
+                        <label htmlFor = "genre">Genre</label>
+                        <br/>
+                        <input
+                            type = "text"
+                            id = "genre"
+                            name = "genre"
+                            required
+                            onChange = {(e) => setGenre(e.target.value)}
+                            value={genre}
+                        />
+                        <br/>
+                        <label htmlFor = "time">Release Date</label>
+                        <br/>
+                        <input
+                            type = "date"
+                            id = "time"
+                            name = "time"
+                            required
+                            onChange = {(e) => setReleaseDate(e.target.value)}
+                            value={release_date}
+                        />
+                        <br/>
+                        <label htmlFor = "developer">Developer</label>
+                        <br/>
+                        <input
+                            type = "text"
+                            id = "developer"
+                            name = "developer"
+                            required
+                            onChange = {(e) => setDeveloper(e.target.value)}
+                            value={developer}
+                        />
+                        <br/>
+                        <label htmlFor = "publisher">Publisher</label>
+                        <br/>
+                        <input
+                            type = "text"
+                            id = "publisher"
+                            name = "publisher"
+                            required
+                            onChange = {(e) => setPublisher(e.target.value)}
+                            value={publisher}
+                        />
+                        <br/>
+                        <label htmlFor = "age_restriction">Age Restriction</label>
+                        <br/>
+                        <input
+                            type = "text"
+                            id = "age_restriction"
+                            name = "age_restriction"
+                            required
+                            onChange = {(e) => setAgeRestriction(e.target.value)}
+                            value={age_restriction}
+                        />
+                        <br/>
+                        <label htmlFor = "supported_platforms">Supported Platforms</label>
+                        <br/>
+                        <select
+                            multiple
+                            value={supported_platforms}
+                            onChange={(e) => {
+                                const values = Array.from(
+                                    e.target.selectedOptions,
+                                    option => Number(option.value)
+                                );
+                                setSupportedPlatforms(values);
+                            }}
+                        >
+                            {availablePlatforms.map(platform => (
+                                <option key={platform.id} value={platform.id}>
+                                    {platform.name}
+                                </option>
+                            ))}
+                        </select>
+                        <br/>
+                        <label htmlFor = "languages">Languages</label>
+                        <br/>
+                        <select
+                            multiple
+                            value={languages}
+                            onChange={(e) => {
+                                const values = Array.from(
+                                    e.target.selectedOptions,
+                                    option => Number(option.value)
+                                );
+                                setLanguages(values);
+                            }}
+                        >
+                            {availableLanguages.map(language => (
+                                <option key={language.id} value={language.id}>
+                                    {language.name}
+                                </option>
+                            ))}
+                        </select>
+                        <br />
+                        <label htmlFor = "price">Price</label>
+                        <br/>
+                        <input
+                            type = "number"
+                            id = "price"
+                            name = "price"
+                            required
+                            onChange = {(e) => setPrice(parseFloat(e.target.value))}
+                            value={price}
+                            step="0.01"
+                            min="0"
+                        />
+                        <br/>
+                        <input
+                            type="submit"
+                            value={"Submit"}
+                            href="/"
+                        />
+                    </form>
+                </div>
+                <div class = "result-section">
+                    <h2>Prediction Result</h2>
+                    {prediction ? (
+                        <>
+                            <h3>
+                                {prediction.prediction === 1
+                                    ? "Popular Game"
+                                    : "Not Popular Game"}
+                            </h3>
 
-            <h2>Predict Game Popularity</h2>
-            <form onSubmit = {PredictGame}>
-                
-                <label htmlFor = "game_name">Game Name</label>
-                <br/>
-                <input 
-                    type = "text" 
-                    id = "game_name" 
-                    name = "game_name" 
-                    required 
-                    onChange = {(e) => setName(e.target.value)}
-                    value={name}
-                />
-                <label htmlFor = "genre">Genre</label>
-                <br/>
-                <input
-                    type = "text"
-                    id = "genre"
-                    name = "genre"
-                    required
-                    onChange = {(e) => setGenre(e.target.value)}
-                    value={genre}
-                />
-                <br/>
-                <label htmlFor = "time">Release Date</label>
-                <br/>
-                <input
-                    type = "date"
-                    id = "time"
-                    name = "time"
-                    required
-                    onChange = {(e) => setReleaseDate(e.target.value)}
-                    value={release_date}
-                />
-                <br/>
-                <label htmlFor = "developer">Developer</label>
-                <br/>
-                <input
-                    type = "text"
-                    id = "developer"
-                    name = "developer"
-                    required
-                    onChange = {(e) => setDeveloper(e.target.value)}
-                    value={developer}
-                />
-                <br/>
-                <label htmlFor = "publisher">Publisher</label>
-                <br/>
-                <input
-                    type = "text"
-                    id = "publisher"
-                    name = "publisher"
-                    required
-                    onChange = {(e) => setPublisher(e.target.value)}
-                    value={publisher}
-                />
-                <br/>
-                <label htmlFor = "age_restriction">Age Restriction</label>
-                <br/>
-                <input
-                    type = "text"
-                    id = "age_restriction"
-                    name = "age_restriction"
-                    required
-                    onChange = {(e) => setAgeRestriction(e.target.value)}
-                    value={age_restriction}
-                />
-                <br/>
-                <label htmlFor = "supported_platforms">Supported Platforms</label>
-                <br/>
-               <select
-                    multiple
-                    value={supported_platforms}
-                    onChange={(e) => {
-                        const values = Array.from(
-                            e.target.selectedOptions,
-                            option => Number(option.value)
-                        );
-                        setSupportedPlatforms(values);
-                    }}
-                >
-                    {availablePlatforms.map(platform => (
-                        <option key={platform.id} value={platform.id}>
-                            {platform.name}
-                        </option>
-                    ))}
-                </select>
-                <br/>
-                <label htmlFor = "languages">Languages</label>
-                <br/>
-                <select
-                    multiple
-                    value={languages}
-                    onChange={(e) => {
-                        const values = Array.from(
-                            e.target.selectedOptions,
-                            option => Number(option.value)
-                        );
-                        setLanguages(values);
-                    }}
-                >
-                    {availableLanguages.map(language => (
-                        <option key={language.id} value={language.id}>
-                            {language.name}
-                        </option>
-                    ))}
-                </select>
-                <br />
-                <label htmlFor = "price">Price</label>
-                <br/>
-                <input
-                    type = "number"
-                    id = "price"
-                    name = "price"
-                    required
-                    onChange = {(e) => setPrice(parseFloat(e.target.value))}
-                    value={price}
-                    step="0.01"
-                    min="0"
-                />
-                <br/>
-                <input
-                    type="submit"
-                    value={"Submit"}
-                    href="/"
-                />
-            </form>
+                            <p>
+                                <strong>Confidence:</strong>{" "}
+                                {(prediction.probability * 100).toFixed(2)}%
+                            </p>
+                        </>
+                    ) : (
+                        <>
+                            <p>
+                                After submitting the game details, the prediction result will
+                                be displayed here.
+                            </p>
+
+                            <p>
+                                Note: The prediction is based on a Random Forest algorithm.
+                            </p>
+                        </>
+                    )}
+                </div>
+            </div>
         </div>
     );
 }

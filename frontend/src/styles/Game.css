@@ -35,3 +35,29 @@
 .delete-button:hover {
   background-color: #d32f2f; /* Darker red */
 }
+
+.prediction-container {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin: 40px;
+}
+
+.form-section {
+    flex: 1;
+    max-width: 500px;
+    background: #f8f8f8;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.result-section {
+    flex: 1;
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    min-height: 600px;
+}
