@@ -3,9 +3,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from rest_framework import generics
-from .serializers import UserSerializer, GameSerializer, LanguageSerializer, PlatformSerializer
+from .serializers import UserSerializer, GameSerializer, PlatformSerializer
 from rest_framework.permissions import AllowAny
-from .models import Game, Platforms, Language
+from .models import Game, Platforms
 from .ml.predict import predict_game
 
 # Create your views here.
@@ -30,11 +30,6 @@ class GameListCreateView(generics.ListCreateAPIView):
     serializer_class = GameSerializer
     permission_classes = [AllowAny]
     
-
-class LanguageListView(generics.ListAPIView):
-    queryset = Language.objects.all()
-    serializer_class = LanguageSerializer
-    permission_classes = [AllowAny]
 
 class PlatformListView(generics.ListAPIView):
     queryset = Platforms.objects.all()

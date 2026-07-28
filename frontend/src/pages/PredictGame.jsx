@@ -14,21 +14,14 @@ function PredictGame() {
     const [supported_platforms, setSupportedPlatforms] = useState([]);
     const [age_restriction, setAgeRestriction] = useState(0);
     const [availablePlatforms, setAvailablePlatforms] = useState([]);
-    const [languages, setLanguages] = useState([]);
+    const [languages, setLanguages] = useState("");
     const [price, setPrice] = useState(0);
     const navigate = useNavigate();
     const [prediction, setPrediction] = useState(null);
 
     useEffect(() => {
-        getLanguages();
         getPlatforms();
     }, [])
-
-    const getLanguages = () => {
-    api.get("/api/languages/")
-        .then(res => setAvailableLanguages(res.data))
-        .catch(err => console.log(err));
-    };
 
     const getPlatforms = () => {
     api.get("/api/platforms/")
@@ -42,10 +35,11 @@ function PredictGame() {
         .filter(platform => supported_platforms.includes(platform.id))
         .map(platform => platform.name)
         .join(",");
-        const supportedLanguages = availableLanguages
-        .filter(language => languages.includes(language.id))
-        .map(language => language.name)
+        const supportedLanguages = languages
+        .split(",")
+        .map(language => language.trim())
         .join(",");
+
         const game = {
             Genres: genre,
             release_date: release_date,
@@ -77,7 +71,6 @@ function PredictGame() {
     const [editSupportedPlatforms, setEditSupportedPlatforms] = useState([]);
     const [editAgeRestriction, setEditAgeRestriction] = useState(0);
     const [editLanguages, setEditLanguages] = useState([]);
-    const [availableLanguages, setAvailableLanguages] = useState([]);
 
     const editGame = (game) => {
         setEditingGameId(game.id);
@@ -100,8 +93,6 @@ function PredictGame() {
                 <li><a href="/predict-game/">Predict Game</a></li>
             </ul>   
 
-            <h1>Game Manager</h1>
-            <h2>Welcome! This is the page for predicting game popularity</h2>
             <div className="prediction-container">
                 <div className="form-section">
                     <h2>Predict Game Popularity</h2>
@@ -121,8 +112,8 @@ function PredictGame() {
                         <br/>
                         <input
                             type = "text"
-                            id = "genre"
-                            name = "genre"
+                            id = "game_genre"
+                            name = "game_genre"
                             required
                             onChange = {(e) => setGenre(e.target.value)}
                             value={genre}
@@ -132,8 +123,8 @@ function PredictGame() {
                         <br/>
                         <input
                             type = "date"
-                            id = "time"
-                            name = "time"
+                            id = "game_time"
+                            name = "game_time"
                             required
                             onChange = {(e) => setReleaseDate(e.target.value)}
                             value={release_date}
@@ -143,8 +134,8 @@ function PredictGame() {
                         <br/>
                         <input
                             type = "text"
-                            id = "developer"
-                            name = "developer"
+                            id = "game_developer"
+                            name = "game_developer"
                             required
                             onChange = {(e) => setDeveloper(e.target.value)}
                             value={developer}
@@ -154,8 +145,8 @@ function PredictGame() {
                         <br/>
                         <input
                             type = "text"
-                            id = "publisher"
-                            name = "publisher"
+                            id = "game_publisher"
+                            name = "game_publisher"
                             required
                             onChange = {(e) => setPublisher(e.target.value)}
                             value={publisher}
@@ -165,8 +156,8 @@ function PredictGame() {
                         <br/>
                         <input
                             type = "text"
-                            id = "age_restriction"
-                            name = "age_restriction"
+                            id = "game_age_restriction"
+                            name = "game_age_restriction"
                             required
                             onChange = {(e) => setAgeRestriction(e.target.value)}
                             value={age_restriction}
@@ -174,44 +165,43 @@ function PredictGame() {
                         <br/>
                         <label htmlFor = "supported_platforms">Supported Platforms</label>
                         <br/>
-                        <select
-                            multiple
-                            value={supported_platforms}
-                            onChange={(e) => {
-                                const values = Array.from(
-                                    e.target.selectedOptions,
-                                    option => Number(option.value)
+                        <div className="selection">
+                            {availablePlatforms.map(platform => {
+                                const isSelected = supported_platforms.includes(platform.id);
+                                return (
+                                    <button
+                                        type="button"
+                                        key={platform.id}
+                                        className={`option ${isSelected ? "option-selected" : ""}`}
+                                        onClick={() => {
+                                            setSupportedPlatforms(previous_platforms =>
+                                                previous_platforms.includes(platform.id)
+                                                    ? previous_platforms.filter(id => id !== platform.id)
+                                                    : [...previous_platforms, platform.id]
+                                            );
+                                        }}
+                                    >
+                                        {platform.name}
+                                    </button>
                                 );
-                                setSupportedPlatforms(values);
-                            }}
-                        >
-                            {availablePlatforms.map(platform => (
-                                <option key={platform.id} value={platform.id}>
-                                    {platform.name}
-                                </option>
-                            ))}
-                        </select>
+                            })}
+                        </div>
                         <br/>
                         <label htmlFor = "languages">Languages</label>
                         <br/>
-                        <select
-                            multiple
-                            value={languages}
-                            onChange={(e) => {
-                                const values = Array.from(
-                                    e.target.selectedOptions,
-                                    option => Number(option.value)
-                                );
-                                setLanguages(values);
-                            }}
-                        >
-                            {availableLanguages.map(language => (
-                                <option key={language.id} value={language.id}>
-                                    {language.name}
-                                </option>
-                            ))}
-                        </select>
-                        <br />
+                        <div className="selection">
+                            <input
+                                required
+                                type="text"
+                                id="languages"
+                                name="languages"
+                                placeholder="e.g. English, German, Spanish"
+                                value={languages}
+                                onChange={(e) => setLanguages(e.target.value)}
+                            />
+                        </div>
+                        <br/>
+                        <br/>
                         <label htmlFor = "price">Price</label>
                         <br/>
                         <input
@@ -227,12 +217,13 @@ function PredictGame() {
                         <br/>
                         <input
                             type="submit"
+                            id="submit_button"
                             value={"Submit"}
                             href="/"
                         />
                     </form>
                 </div>
-                <div class = "result-section">
+                <div className = "result-section">
                     <h2>Prediction Result</h2>
                     {prediction ? (
                         <>
