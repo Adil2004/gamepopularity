@@ -7,7 +7,6 @@ import "../styles/Game.css"
 function PredictGame() {
     const [game, setGames] = useState([]);
     const [name, setName] = useState("");
-    const [release_date, setReleaseDate] = useState("");
     const [genre, setGenre] = useState("");
     const [developer, setDeveloper] = useState("");
     const [publisher, setPublisher] = useState("");
@@ -42,7 +41,6 @@ function PredictGame() {
 
         const game = {
             Genres: genre,
-            release_date: release_date,
             developer: developer,
             supported_os: supportedOS,
             supported_languages: supportedLanguages,
@@ -64,7 +62,6 @@ function PredictGame() {
 
     const [editingGameId, setEditingGameId] = useState(null);
     const [editName, setEditName] = useState("");
-    const [editReleaseDate, setEditReleaseDate] = useState("");
     const [editGenre, setEditGenre] = useState("");
     const [editDeveloper, setEditDeveloper] = useState("");
     const [editPublisher, setEditPublisher] = useState("");
@@ -75,7 +72,6 @@ function PredictGame() {
     const editGame = (game) => {
         setEditingGameId(game.id);
         setEditName(game.name);
-        setEditReleaseDate(game.release_date);
         setEditGenre(game.genre);
         setEditDeveloper(game.developer);
         setEditPublisher(game.publisher);
@@ -117,17 +113,6 @@ function PredictGame() {
                             required
                             onChange = {(e) => setGenre(e.target.value)}
                             value={genre}
-                        />
-                        <br/>
-                        <label htmlFor = "time">Release Date</label>
-                        <br/>
-                        <input
-                            type = "date"
-                            id = "game_time"
-                            name = "game_time"
-                            required
-                            onChange = {(e) => setReleaseDate(e.target.value)}
-                            value={release_date}
                         />
                         <br/>
                         <label htmlFor = "developer">Developer</label>

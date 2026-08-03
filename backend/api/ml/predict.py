@@ -1,7 +1,6 @@
 import joblib
 import pandas as pd
 import os
-from api.ml.transformers import GameAgeTransformer
 
 BASE_DIR = os.path.dirname(__file__)
 
@@ -12,12 +11,11 @@ def predict_game(game):
 
     data_frame = pd.DataFrame([game])
 
-    df = GameAgeTransformer().fit_transform(data_frame)
-    df["age_restriction"] = df["age_restriction"].astype(int)
+    data_frame["age_restriction"] = data_frame["age_restriction"].astype(int)
 
-    prediction = model.predict(df)[0]
+    prediction = model.predict(data_frame)[0]
 
-    probability = model.predict_proba(df)[0]
+    probability = model.predict_proba(data_frame)[0]
 
     return {
         "prediction": int(prediction),
