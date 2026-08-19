@@ -1,16 +1,5 @@
-from django.contrib.auth.models import User
 from rest_framework import serializers
 from .models import Game, Platforms
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ["id", "username", "password"]
-        extra_kwargs = {"password": {"write_only": True}}
-    
-    def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        return user
 
 class PlatformSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,12 +8,6 @@ class PlatformSerializer(serializers.ModelSerializer):
 
 class GameSerializer(serializers.ModelSerializer):
     supported_platforms = PlatformSerializer(many=True, read_only=True)
-    # language_ids = serializers.PrimaryKeyRelatedField(
-    #     many=True,
-    #     queryset=Language.objects.all(),
-    #     source="languages",
-    #     write_only=True
-    # )
     supported_platforms_id = serializers.PrimaryKeyRelatedField(
         many=True,
         queryset=Platforms.objects.all(),

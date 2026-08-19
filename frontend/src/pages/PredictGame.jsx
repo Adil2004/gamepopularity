@@ -214,8 +214,8 @@ function PredictGame() {
                         <>
                             <h3>
                                 {prediction.prediction === 1
-                                    ? "Popular Game"
-                                    : "Not Popular Game"}
+                                    ? "Will be Popular Game"
+                                    : "Will not be Popular Game"}
                             </h3>
 
                             <p>
@@ -231,7 +231,7 @@ function PredictGame() {
                             </p>
 
                             <p>
-                                Note: The prediction is based on a Random Forest algorithm.
+                                Note: The prediction is based on a Random Forest algorithm using 100 decision trees.
                             </p>
                         </>
                     )}
