@@ -231,7 +231,7 @@ function PredictGame() {
                             </p>
 
                             <p>
-                                Note: The prediction is based on a Random Forest algorithm using 100 decision trees.
+                                Note: The prediction is based on a Random Forest algorithm using 50 decision trees.
                             </p>
                         </>
                     )}

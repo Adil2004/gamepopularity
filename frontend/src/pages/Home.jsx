@@ -53,7 +53,7 @@ function Home() {
             </ul>   
 
             <h1>Game Manager</h1>
-            <h2>Welcome! This is the game management page. </h2>
+            <h2>Welcome! This is the page for predicting the game popularity. </h2>
             <br />
             <h2>In this website, you can enter the game details, such as developer and publisher, genre, language, and more.</h2>
             <h2>After entering the details, the website can predict the game's popularity according to random forest algorithm.</h2>
