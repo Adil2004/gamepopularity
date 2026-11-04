@@ -145,6 +145,8 @@ STATIC_URL = 'static/'
 CORS_ALLOWED_ORIGINS = [
     "https://dissertation-e11fqczr0-project-s-projects-projects.vercel.app",
     "https://dissertation-38f9.vercel.app",
+    "https://dissertation-navy.vercel.app/",
+
 ]
 
 CORS_ALLOW_CREDENTIALS = True
