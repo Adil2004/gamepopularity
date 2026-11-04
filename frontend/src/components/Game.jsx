@@ -1,5 +1,5 @@
 import React from "react"
-import "../styles/game.css"
+import "../styles/Game.css"
 
 function Game({game, onDelete, onEdit, onDetail}) {
 
