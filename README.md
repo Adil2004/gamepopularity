@@ -7,11 +7,11 @@ Download and Install Libraries
 
 Open a terminal in the project directory and create a virtual environment:
 
-py -m venv venv
+py -3.12 -m venv venv
 
 2. Activate the Virtual Environment
 
-venv\Scripts\activate
+venv\scripts\activate
 
 3. Install Python Libraries
 
@@ -33,15 +33,24 @@ Start the Django development server:
 
 python manage.py runserver
 
+
+
 Terminal 2 — Frontend
 
 Open a second terminal and navigate to the frontend directory:
 
 cd frontend
 
-Start the React development server:
+Install the React:
 
 npm install
+
+Donwload React libraries:
+
+npm install axios react-router-dom
+
+Start the React development server:
+
 npm run dev
 
 The application can then be accessed using the URL displayed in the frontend terminal.
